@@ -24,7 +24,7 @@ public final class RepertorieServiceImpl implements RepertorieService {
 
     public RepertorieDTO saveRepertorie(Repertorie repertorie) {
         // Verificar se o usuário é um músico
-        if (this.getMoreRecent().getRepertorieName().equalsIgnoreCase(repertorie.getRepertorieName())) {
+        if (!this.findAll().isEmpty() && this.getMoreRecent().getRepertorieName().equalsIgnoreCase(repertorie.getRepertorieName())) {
             throw new DuplicatedNameException("O repertório atual possui o mesmo nome!");
         }
         Repertorie saved = this.repertorieRepository.save(repertorie);
