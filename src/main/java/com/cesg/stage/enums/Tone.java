@@ -1,0 +1,29 @@
+package com.cesg.stage.enums;
+
+public enum Tone {
+
+    DO_MAIOR,
+    DO_MENOR,
+    DO_SUSTENIDO_MAIOR,
+    DO_SUSTENIDO_MENOR,
+    RE_MAIOR,
+    RE_MENOR,
+    RE_SUSTENIDO_MAIOR,
+    RE_SUSTENIDO_MENOR,
+    MI_MAIOR,
+    MI_MENOR,
+    FA_MAIOR,
+    FA_MENOR,
+    FA_SUSTENIDO_MAIOR,
+    FA_SUSTENIDO_MENOR,
+    SOL_MAIOR,
+    SOL_MENOR,
+    SOL_SUSTENIDO_MAIOR,
+    SOL_SUSTENIDO_MENOR,
+    LA_MAIOR,
+    LA_MENOR,
+    LA_SUSTENIDO_MAIOR,
+    LA_SUSTENIDO_MENOR,
+    SI_MAIOR,
+    SI_MENOR;
+}
