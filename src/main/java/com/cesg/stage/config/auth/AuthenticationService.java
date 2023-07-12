@@ -1,6 +1,7 @@
 package com.cesg.stage.config.auth;
 
 import com.cesg.stage.config.service.JwtService;
+import com.cesg.stage.exceptions.DuplicatedUserException;
 import com.cesg.stage.model.User;
 import com.cesg.stage.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,10 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        var saved = this.userRepository.findByEmail(request.getEmail());
+        if (!saved.isEmpty()) {
+            throw new DuplicatedUserException("Já existe um usuário com este e-mail!");
+        }
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())

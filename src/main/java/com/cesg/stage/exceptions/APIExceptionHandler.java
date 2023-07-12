@@ -21,6 +21,12 @@ public class APIExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 
+    @ExceptionHandler(DuplicatedUserException.class)
+    public ResponseEntity<StandardError> duplicatedUser(DuplicatedUserException e, HttpServletRequest request) {
+        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Duplicidade!", e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+    }
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<StandardError> badRequest(BadRequestException e, HttpServletRequest request) {
         StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Sem permissão!", e.getMessage(), request.getRequestURI());
