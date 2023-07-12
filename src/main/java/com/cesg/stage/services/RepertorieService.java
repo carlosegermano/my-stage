@@ -19,5 +19,7 @@ public sealed interface RepertorieService permits RepertorieServiceImpl {
 
     void deleteRepertorie(String id);
 
-    void addSong(Song song);
+    void addSong(String songId);
+
+    void removeSong(String songId);
 }

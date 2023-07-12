@@ -1,6 +1,8 @@
 package com.cesg.stage.controllers;
 
+import com.cesg.stage.exceptions.DuplicatedNameException;
 import com.cesg.stage.model.Repertorie;
+import com.cesg.stage.model.Song;
 import com.cesg.stage.records.RepertorieDTO;
 import com.cesg.stage.records.RepertorieUpdateDTO;
 import com.cesg.stage.services.RepertorieService;
@@ -19,6 +21,16 @@ public class RepertorieController {
     @PostMapping
     public RepertorieDTO saveRepertorie(@RequestBody Repertorie repertorie) {
         return this.repertorieService.saveRepertorie(repertorie);
+    }
+
+    @PostMapping("/songs/{songId}")
+    public void addSong(@PathVariable String songId) {
+        this.repertorieService.addSong(songId);
+    }
+
+    @DeleteMapping("/songs/{songId}")
+    public void removeSong(@PathVariable String songId) {
+        this.repertorieService.removeSong(songId);
     }
 
     @PutMapping("/{repertorieId}")

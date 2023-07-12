@@ -71,9 +71,29 @@ public final class RepertorieServiceImpl implements RepertorieService {
         this.repertorieRepository.deleteById(id);
     }
 
-    public void addSong(Song song) {
+    @Transactional
+    public void addSong(String songId) {
         Repertorie repertorie = this.getMoreRecent();
-        repertorie.getSongs().add(song);
-        this.repertorieRepository.save(repertorie);
+        Optional<Song> song = this.songRepository.findById(songId);
+        if (song.isPresent()) {
+            if (repertorie.getSongs().contains(song.get())) {
+                throw new DuplicatedNameException("Música já existe no repertório atual");
+            }
+            song.get().setRepertorieId(repertorie.getId());
+            this.songRepository.save(song.get());
+            repertorie.getSongs().add(song.get());
+            this.repertorieRepository.save(repertorie);
+        }
+    }
+
+    @Transactional
+    public void removeSong(String songId) {
+        Repertorie repertorie = this.getMoreRecent();
+        repertorie.getSongs().removeIf(s -> s.getId().equals(songId));
+        this.songRepository.findById(songId).map(song -> {
+            song.setRepertorieId("");
+            this.songRepository.save(song);
+            return song;
+        });
     }
 }

@@ -22,14 +22,10 @@ public final class SongServiceImpl implements SongService {
     private final UserService userService;
 
     public SongDTO saveSong(Song song) {
-        Repertorie repertorie = this.repertorieService.getMoreRecent();
-        song.setRepertorieId(repertorie.getId());
-
         User loggedUser = this.userService.getLoggedUser();
         song.setUserId(loggedUser.getId());
-
+        song.setRepertorieId("");
         Song songSaved = this.songRepository.save(song);
-        this.repertorieService.addSong(songSaved);
         return new SongDTO(
                 songSaved.getSongName(),
                 songSaved.getSongWriter(),
