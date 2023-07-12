@@ -11,25 +11,31 @@ public class APIExceptionHandler {
 
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
-        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(), "Objeto não encontrado!", e.getMessage(), request.getRequestURI());
+        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(), "Objeto não encontrado", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
     }
 
     @ExceptionHandler(DuplicatedNameException.class)
     public ResponseEntity<StandardError> duplicatedName(DuplicatedNameException e, HttpServletRequest request) {
-        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Duplicidade!", e.getMessage(), request.getRequestURI());
+        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Duplicidade", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 
     @ExceptionHandler(DuplicatedUserException.class)
     public ResponseEntity<StandardError> duplicatedUser(DuplicatedUserException e, HttpServletRequest request) {
-        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Duplicidade!", e.getMessage(), request.getRequestURI());
+        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Duplicidade", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<StandardError> badRequest(BadRequestException e, HttpServletRequest request) {
-        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Sem permissão!", e.getMessage(), request.getRequestURI());
+        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Sem permissão", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<StandardError> invalidAuthentication(AuthenticationException e, HttpServletRequest request) {
+        StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.UNAUTHORIZED.value(), "Falha de autenticação", e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
     }
 }

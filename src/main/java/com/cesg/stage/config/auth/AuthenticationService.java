@@ -1,6 +1,7 @@
 package com.cesg.stage.config.auth;
 
 import com.cesg.stage.config.service.JwtService;
+import com.cesg.stage.exceptions.AuthenticationException;
 import com.cesg.stage.exceptions.DuplicatedUserException;
 import com.cesg.stage.model.User;
 import com.cesg.stage.repositories.UserRepository;
@@ -34,17 +35,20 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        this.authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = this.userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
-        var jwtToken = this.jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
-
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
+        try {
+            this.authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+            var user = this.userRepository.findByEmail(request.getEmail())
+                    .orElseThrow();
+            var jwtToken = this.jwtService.generateToken(user);
+            return AuthenticationResponse.builder().token(jwtToken).build();
+        } catch (RuntimeException e) {
+            throw new AuthenticationException("Login ou senha inválidos");
+        }
     }
 }
