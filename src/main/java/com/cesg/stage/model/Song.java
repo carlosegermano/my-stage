@@ -1,6 +1,7 @@
 package com.cesg.stage.model;
 
 import com.cesg.stage.enums.Tone;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 
 @Document
+@Builder
 @Setter
 @Getter
 @EqualsAndHashCode
@@ -25,4 +27,5 @@ public class Song implements Serializable {
     private String releaseYear;
     private String repertorieId;
     private String userId;
+    private Boolean isMarked;
 }

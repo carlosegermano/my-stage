@@ -25,13 +25,16 @@ public final class SongServiceImpl implements SongService {
         User loggedUser = this.userService.getLoggedUser();
         song.setUserId(loggedUser.getId());
         song.setRepertorieId("");
+        song.setIsMarked(Boolean.FALSE);
         Song songSaved = this.songRepository.save(song);
         return new SongDTO(
+                songSaved.getId(),
                 songSaved.getSongName(),
                 songSaved.getSongWriter(),
                 songSaved.getArtist(),
                 songSaved.getTone(),
-                songSaved.getReleaseYear()
+                songSaved.getReleaseYear(),
+                songSaved.getIsMarked()
         );
     }
 

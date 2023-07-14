@@ -26,6 +26,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers( "/stage/repertories/songs/**").permitAll()
                         .requestMatchers( "/stage/repertories/**").hasRole("MUSICIAN")
                         .anyRequest().authenticated()
                 )

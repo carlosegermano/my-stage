@@ -1,9 +1,11 @@
 package com.cesg.stage.services;
 
+import com.cesg.stage.exceptions.BadRequestException;
 import com.cesg.stage.exceptions.DuplicatedNameException;
 import com.cesg.stage.exceptions.ObjectNotFoundException;
 import com.cesg.stage.model.Repertorie;
 import com.cesg.stage.model.Song;
+import com.cesg.stage.model.User;
 import com.cesg.stage.records.RepertorieDTO;
 import com.cesg.stage.records.RepertorieUpdateDTO;
 import com.cesg.stage.repositories.RepertorieRepository;
@@ -21,6 +23,8 @@ public final class RepertorieServiceImpl implements RepertorieService {
 
     private final RepertorieRepository repertorieRepository;
     private final SongRepository songRepository;
+
+    private final UserService userService;
 
     public RepertorieDTO saveRepertorie(Repertorie repertorie) {
         // Verificar se o usuário é um músico
@@ -73,25 +77,38 @@ public final class RepertorieServiceImpl implements RepertorieService {
 
     @Transactional
     public void addSong(String songId) {
+        User loggedUser = this.userService.getLoggedUser();
         Repertorie repertorie = this.getMoreRecent();
-        Optional<Song> song = this.songRepository.findById(songId);
-        if (song.isPresent()) {
-            if (repertorie.getSongs().contains(song.get())) {
+        Optional<Song> songOptional = this.songRepository.findById(songId);
+        if (songOptional.isPresent()) {
+            Song song = songOptional.get();
+            if (repertorie.getSongs().contains(song)) {
                 throw new DuplicatedNameException("Música já existe no repertório atual");
             }
-            song.get().setRepertorieId(repertorie.getId());
-            this.songRepository.save(song.get());
-            repertorie.getSongs().add(song.get());
+            song.setRepertorieId(repertorie.getId());
+            song.setUserId(loggedUser.getId());
+            song.setIsMarked(true);
+            this.songRepository.save(song);
+            repertorie.getSongs().add(song);
             this.repertorieRepository.save(repertorie);
         }
     }
 
     @Transactional
     public void removeSong(String songId) {
+        User loggedUser = this.userService.getLoggedUser();
         Repertorie repertorie = this.getMoreRecent();
-        repertorie.getSongs().removeIf(s -> s.getId().equals(songId));
         this.songRepository.findById(songId).map(song -> {
+
+            if (loggedUser.getId().equals(song.getUserId())) {
+                repertorie.getSongs().removeIf(s -> s.getId().equals(songId));
+            } else {
+                throw new BadRequestException("Só é possível remover uma música adicionada por você!");
+            }
+
             song.setRepertorieId("");
+            song.setUserId("");
+            song.setIsMarked(false);
             this.songRepository.save(song);
             return song;
         });
