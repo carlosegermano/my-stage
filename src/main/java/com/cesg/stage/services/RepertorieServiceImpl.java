@@ -33,7 +33,7 @@ public final class RepertorieServiceImpl implements RepertorieService {
 
     @Override
     public RepertorieDTO updateRepertorie(RepertorieUpdateDTO repertorie, String repertorieId) {
-        return this.repertorieRepository.findById(repertorieId)
+            return this.repertorieRepository.findById(repertorieId)
                 .map(rep -> {
                     rep.setRepertorieName(repertorie.repertorieName());
                     this.repertorieRepository.save(rep);
